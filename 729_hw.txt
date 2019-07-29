@@ -1,0 +1,5 @@
+SELECT address,userinfo.uid,cname 
+FROM userinfo RIGHT join live ON
+ live.uid=userinfo.uid
+ right join house ON 
+ live.hid=house.hid
