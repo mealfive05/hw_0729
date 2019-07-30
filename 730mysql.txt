@@ -1,0 +1,69 @@
+列出帳單大於一千
+SELECT *
+from(
+	select tel ,sum(fee) as sum_fee
+    FROM bill
+    group by tel
+) as a
+where sum_fee>=1000
+視為一筆
+-------------------------------------------
+列出金額最高
+極端值一定要這樣下
+不然一定會錯
+SELECT tel,max_sum_fee
+FROM(
+
+SELECT max(sum_fee) as max_sum_fee
+from(
+	select sum(fee) as sum_fee
+    FROM bill
+    group by tel
+)as a
+)as aa,(
+select tel,sum(fee) as sum_fee
+    FROM bill
+    group by tel
+) as bb
+where aa.max_sum_fee = bb.sum_fee
+
+
+誰有最多電話並且有幾筆
+SELECT cname,max_phone
+FROM(
+SELECT max(cou) as max_phone
+from(SELECT cname,count(cname) as cou from userinfo,live,phone where userinfo.uid= live.uid AND live.hid = phone.hid group by cname 
+) as a)as aa,
+(SELECT cname,count(cname) as cou2 from userinfo,live,phone where userinfo.uid= live.uid AND live.hid = phone.hid group by cname )as bb
+WHERE aa.max_phone = bb.cou2
+
+
+老師版本
+select max(n) as max_n
+from(
+    select userinfo.uid,count(tel) as n
+    from userinfo left join live on userinfo.uid=live.uid
+    left join phone on live.hid = phone.hid
+    group by userinfo.uid
+    )as a
+
+
+http://spaces.isu.edu.tw/upload/19225/0/news/postfile_316.pdf
+客戶資料表，含頭像資料
+base64編碼，varchar存
+商品資料表，含有八個影像資料
+交易資料表，含有交易時間紀錄
+
+CREATE DATABASE foo;
+CREATE TABLE `foo`.`tete` ( `ya` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(50) NOT NULL , `nu` INT NOT NULL , PRIMARY KEY (`ya`)) ENGINE = InnoDB;
+CREATE TABLE `foo`.`tete2` ( `ya2` INT NOT NULL AUTO_INCREMENT , `name2` VARCHAR(50) NOT NULL , `nu2` INT NOT NULL , PRIMARY KEY (`ya2`)) ENGINE = InnoDB;
+
+
+SELECT * from userinfo where bd not BETWEEN SUBDATE(now(), INTERVAL 6 MONTH) and now();
+epoch time(時間搓、unix)
+
+sELECT * from userinfo WHERE bd< (SELECT date_format(now(), '%Y-%m-%d'))
+sELECT uid,cname,bd as age from userinfo WHERE bd< (SELECT date_format(now(), '%Y-%m-%d'))
+
+SELECT datediff('2017/4/2', '2017/3/2')
+SELECT cname,unix_timestamp(userinfo.bd) FROM userinfo
